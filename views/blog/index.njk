@@ -1,0 +1,31 @@
+{% extends "layout.njk" %}
+{% from "blog/_macros.njk" import postCard, pagination %}
+{% set nav = "blog" %}
+{% set title = "Ministry Blogs" + (" — Page " + page if page > 1 else "") %}
+{% set description = "Practical writing on pastoral leadership, church boards, volunteers, and discipleship from Dick Hardy and Jonathan Hardy." %}
+
+{% block content %}
+<section class="page-intro">
+  <div class="page-intro-inner">
+    <p class="eyebrow">Ministry Blogs</p>
+    <h1>Notes From the Work of Leading Well</h1>
+    <div class="divider"></div>
+    <p>This is where we think out loud about the real work of ministry leadership — the decisions pastors wrestle with, the tensions boards navigate, and the small, steady habits that make a lasting difference over a lifetime of service.</p>
+    <p>Expect short, practical posts drawn from decades in pastoral ministry, church boards, and coaching leaders through the best of times as well as through the hard seasons — written to be useful on a Tuesday afternoon, not just inspiring on a Sunday morning.</p>
+  </div>
+</section>
+
+<section class="post-list" aria-label="Articles">
+  {% if posts.length %}
+    <div class="post-grid">
+      {% for post in posts %}{{ postCard(post) }}{% endfor %}
+    </div>
+    {{ pagination(page, totalPages, "/blog") }}
+  {% else %}
+    <div class="empty-state">
+      <h2>First posts are on the way</h2>
+      <p>We're getting the first articles ready. Check back soon, or <a href="mailto:{{ site.email }}">reach out</a> if there's a leadership question you'd like us to write about.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

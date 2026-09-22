@@ -1,0 +1,35 @@
+{% extends "layout.njk" %}
+{% from "blog/_macros.njk" import postCard, pagination %}
+{% set nav = "blog" %}
+{% set title = "Articles by " + author.name %}
+{% set description = author.bio or ("Ministry leadership articles by " + author.name + ".") %}
+
+{% block content %}
+<section class="page-header">
+  <div class="page-header-inner">
+    <a class="breadcrumb" href="/blog">&larr; All Articles</a>
+    <p class="eyebrow">Author</p>
+    <div class="author-header">
+      {% if author.photo %}<img src="{{ author.photo }}" alt="{{ author.name }}" width="112" height="112">{% endif %}
+      <div>
+        <h1>{{ author.name }}</h1>
+        {% if author.bio %}<p>{{ author.bio }}</p>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="post-list" aria-label="Articles by {{ author.name }}">
+  {% if posts.length %}
+    <div class="post-grid">
+      {% for post in posts %}{{ postCard(post) }}{% endfor %}
+    </div>
+    {{ pagination(page, totalPages, "/blog/author/" + author.slug) }}
+  {% else %}
+    <div class="empty-state">
+      <h2>No articles yet</h2>
+      <p>{{ author.name }} hasn't published anything here yet. <a href="/blog">Browse all articles</a>.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "layout.njk" %}
+{% set title = "Something Went Wrong" %}
+
+{% block content %}
+<section class="page-intro">
+  <div class="page-intro-inner">
+    <p class="eyebrow">Error</p>
+    <h1>Something went wrong on our end</h1>
+    <div class="divider"></div>
+    <p>Please try again in a moment. If it keeps happening, <a href="mailto:{{ site.email }}">let us know</a>.</p>
+    <a class="btn-gold" href="/">Back to Home</a>
+  </div>
+</section>
+{% endblock %}

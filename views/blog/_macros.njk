@@ -1,0 +1,37 @@
+{% macro byline(post, showAvatar=true) %}
+<div class="byline">
+  {% if post.author %}
+    {% if showAvatar and post.author.photo %}<img src="{{ post.author.photo }}" alt="" width="36" height="36" loading="lazy">{% endif %}
+    <span>By <a href="/blog/author/{{ post.author.slug }}">{{ post.author.name }}</a></span>
+    <span class="sep" aria-hidden="true">·</span>
+  {% endif %}
+  <time datetime="{{ post.date }}">{{ post.date | date }}</time>
+  <span class="sep" aria-hidden="true">·</span>
+  <span>{{ post.readingMinutes }} min read</span>
+</div>
+{% endmacro %}
+
+{% macro postCard(post) %}
+<article class="post-card">
+  {% if post.image %}
+  <a class="post-card-image" href="/blog/{{ post.slug }}" tabindex="-1" aria-hidden="true">
+    <img src="{{ post.image.url }}" alt="" loading="lazy">
+  </a>
+  {% endif %}
+  <div class="post-card-body">
+    {{ byline(post, false) }}
+    <h2><a href="/blog/{{ post.slug }}">{{ post.title }}</a></h2>
+    <p>{{ post.excerpt }}</p>
+    <a class="read-more" href="/blog/{{ post.slug }}" aria-label="Read {{ post.title }}">Read article &rarr;</a>
+  </div>
+</article>
+{% endmacro %}
+
+{% macro pagination(page, totalPages, base) %}
+{% if totalPages > 1 %}
+<nav class="pagination" aria-label="Pagination">
+  <span>{% if page > 1 %}<a href="{{ base }}{% if page > 2 %}?page={{ page - 1 }}{% endif %}">&larr; Newer posts</a>{% endif %}</span>
+  <span>{% if page < totalPages %}<a href="{{ base }}?page={{ page + 1 }}">Older posts &rarr;</a>{% endif %}</span>
+</nav>
+{% endif %}
+{% endmacro %}

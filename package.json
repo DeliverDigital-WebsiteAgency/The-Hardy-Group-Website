@@ -1,0 +1,22 @@
+{
+  "name": "the-hardy-group",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Hardy Group website — Node/Express front end with headless WordPress (cms.thehardygroup.org) for blog posts and authors.",
+  "main": "server.js",
+  "type": "module",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "compression": "^1.8.0",
+    "express": "^5.1.0",
+    "gray-matter": "^4.0.3",
+    "marked": "^18.0.14",
+    "nunjucks": "^3.2.4"
+  }
+}

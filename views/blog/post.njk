@@ -1,0 +1,52 @@
+{% extends "layout.njk" %}
+{% from "blog/_macros.njk" import byline %}
+{% set nav = "blog" %}
+{% set title = post.title %}
+{% set description = post.excerpt %}
+{% set ogType = "article" %}
+
+{% block head %}
+<script type="application/ld+json">{{ schema | json | safe }}</script>
+{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="page-header-inner">
+    <a class="breadcrumb" href="/blog">&larr; All Articles</a>
+    <p class="eyebrow">Ministry Blogs</p>
+    <h1>{{ post.title }}</h1>
+    <div class="divider"></div>
+    {{ byline(post) }}
+  </div>
+</section>
+
+{% if post.image %}
+<div class="post-hero-image">
+  <img src="{{ post.image.url }}" alt="{{ post.image.alt }}"{% if post.image.width %} width="{{ post.image.width }}" height="{{ post.image.height }}"{% endif %}>
+</div>
+{% endif %}
+
+<article class="page-body">
+  <div class="page-body-inner">
+    <div class="prose">
+      {{ post.content | safe }}
+    </div>
+
+    {% if post.author %}
+    <aside class="author-box" aria-label="About the author">
+      {% if post.author.photo %}<img src="{{ post.author.photo }}" alt="{{ post.author.name }}" width="72" height="72" loading="lazy">{% endif %}
+      <div>
+        <p class="eyebrow">About the Author</p>
+        <h2><a href="/blog/author/{{ post.author.slug }}">{{ post.author.name }}</a></h2>
+        {% if post.author.bio %}<p>{{ post.author.bio }}</p>{% endif %}
+      </div>
+    </aside>
+    {% endif %}
+  </div>
+</article>
+
+<section class="page-cta">
+  <p>Have a leadership question you'd like us to write about?</p>
+  <a class="btn-gold" href="mailto:{{ site.email }}">Contact Us</a>
+</section>
+{% endblock %}

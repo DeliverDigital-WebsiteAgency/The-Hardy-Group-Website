@@ -1,0 +1,13 @@
+node_modules/
+.env
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Source material and old static prototypes — kept locally, not deployed.
+/Blogs/
+/files(1)/
+/*.html
+/*.docx
+/*.rtf
+/*.png

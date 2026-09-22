@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% set fullTitle = (title + ' — ' + site.name) if title else site.name %}
+<title>{{ fullTitle }}</title>
+{% if description %}<meta name="description" content="{{ description }}">{% endif %}
+<link rel="canonical" href="{{ canonical }}">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:title" content="{{ title or site.name }}">
+{% if description %}<meta property="og:description" content="{{ description }}">{% endif %}
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:type" content="{{ ogType or 'website' }}">
+<meta property="og:image" content="{{ ogImage or (site.url + '/images/dick-and-jonathan-hardy.png') }}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site.css">
+{% block head %}{% endblock %}
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<div class="topbar"></div>
+
+<header class="site-header">
+  <a class="logo" href="/">The Hardy <span>Group</span></a>
+  <nav class="main-nav" aria-label="Primary">
+    <a href="/blog"{% if nav == 'blog' %} aria-current="page"{% endif %}>Blog</a>
+    <a class="nav-contact" href="mailto:{{ site.email }}">Contact Us</a>
+  </nav>
+</header>
+
+<main id="content"{% if mainClass %} class="{{ mainClass }}"{% endif %}>
+{% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="footer-contact">
+    <a href="mailto:{{ site.email }}">Contact Us</a>
+  </div>
+  <div class="footer-rule"></div>
+  &copy; {{ year }} The Hardy Group LLC &nbsp;&middot;&nbsp; <a href="https://leaders.church">Leaders.Church</a>
+  <div class="footer-legal">
+    <a href="/privacy">Privacy Policy</a> &nbsp;&middot;&nbsp;
+    <a href="/terms">Terms &amp; Conditions</a> &nbsp;&middot;&nbsp;
+    <a href="/eula">EULA</a>
+  </div>
+</footer>
+
+</body>
+</html>
