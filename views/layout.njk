@@ -3,21 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-{% set fullTitle = (title + ' — ' + site.name) if title else site.name %}
+{#- Search-result title: an explicit docTitle wins; otherwise add " | The Hardy Group"
+    only when the result stays within the ~60 characters Google displays. -#}
+{% set baseTitle = seoTitle or title %}
+{% set suffixed = baseTitle + ' | ' + site.name if baseTitle else site.name %}
+{% set fullTitle = docTitle or (suffixed if suffixed.length <= 60 else baseTitle) %}
 <title>{{ fullTitle }}</title>
 {% if description %}<meta name="description" content="{{ description }}">{% endif %}
+{% if noindex %}<meta name="robots" content="noindex">{% endif %}
 <link rel="canonical" href="{{ canonical }}">
 <meta property="og:site_name" content="{{ site.name }}">
 <meta property="og:title" content="{{ title or site.name }}">
 {% if description %}<meta property="og:description" content="{{ description }}">{% endif %}
 <meta property="og:url" content="{{ canonical }}">
 <meta property="og:type" content="{{ ogType or 'website' }}">
-<meta property="og:image" content="{{ ogImage or (site.url + '/images/dick-and-jonathan-hardy.png') }}">
+{% if ogImage %}
+<meta property="og:image" content="{{ ogImage }}">
+{% else %}
+<meta property="og:image" content="{{ site.url }}/images/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dick Hardy and Jonathan Hardy of The Hardy Group">
+{% endif %}
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0F2540">
+<link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/site.css">
+{% for schema in jsonld %}
+<script type="application/ld+json">{{ schema | json | safe }}</script>
+{% endfor %}
 {% block head %}{% endblock %}
 </head>
 <body>
@@ -41,12 +60,17 @@
     <a href="mailto:{{ site.email }}">Contact Us</a>
   </div>
   <div class="footer-rule"></div>
-  &copy; {{ year }} The Hardy Group LLC &nbsp;&middot;&nbsp; <a href="https://leaders.church">Leaders.Church</a>
+  &copy; {{ year }} {{ site.legalName }}. All rights reserved. &nbsp;&middot;&nbsp; <a href="{{ site.url }}">TheHardyGroup.org</a>
   <div class="footer-legal">
     <a href="/privacy">Privacy Policy</a> &nbsp;&middot;&nbsp;
     <a href="/terms">Terms &amp; Conditions</a> &nbsp;&middot;&nbsp;
+    <a href="/accessibility">Accessibility</a> &nbsp;&middot;&nbsp;
     <a href="/eula">EULA</a>
   </div>
+  <p class="footer-nonprofit">
+    {{ site.legalName }} is a nonprofit organization exempt from federal income tax under Section 501(c)(3) of the Internal Revenue Code.
+    {{ site.address.street }}, {{ site.address.city }}, {{ site.address.state }} {{ site.address.zip }}.
+  </p>
 </footer>
 
 </body>

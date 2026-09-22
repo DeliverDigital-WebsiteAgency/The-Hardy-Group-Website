@@ -2,7 +2,7 @@
 {% from "blog/_macros.njk" import postCard, pagination %}
 {% set nav = "blog" %}
 {% set title = "Articles by " + author.name %}
-{% set description = author.bio or ("Ministry leadership articles by " + author.name + ".") %}
+{% set description = "Articles on pastoral leadership, church boards, and ministry by " + author.name + (", " + author.jobTitle if author.jobTitle else "") + "." %}
 
 {% block content %}
 <section class="page-header">

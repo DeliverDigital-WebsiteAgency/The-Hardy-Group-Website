@@ -1,10 +1,8 @@
 {% macro byline(post, showAvatar=true) %}
 <div class="byline">
-  {% if post.author %}
-    {% if showAvatar and post.author.photo %}<img src="{{ post.author.photo }}" alt="" width="36" height="36" loading="lazy">{% endif %}
-    <span>By <a href="/blog/author/{{ post.author.slug }}">{{ post.author.name }}</a></span>
-    <span class="sep" aria-hidden="true">·</span>
-  {% endif %}
+  {% if showAvatar %}{% for a in post.authors %}{% if a.photo %}<img src="{{ a.photo }}" alt="" width="36" height="36" loading="lazy">{% endif %}{% endfor %}{% endif %}
+  <span>By {% for a in post.authors %}<a href="/blog/author/{{ a.slug }}">{{ a.name }}</a>{% if not loop.last %}{{ " & " if loop.revindex == 2 else ", " }}{% endif %}{% endfor %}</span>
+  <span class="sep" aria-hidden="true">·</span>
   <time datetime="{{ post.date }}">{{ post.date | date }}</time>
   <span class="sep" aria-hidden="true">·</span>
   <span>{{ post.readingMinutes }} min read</span>
@@ -25,6 +23,23 @@
     <a class="read-more" href="/blog/{{ post.slug }}" aria-label="Read {{ post.title }}">Read article &rarr;</a>
   </div>
 </article>
+{% endmacro %}
+
+{# Compact list of article links, used for "Latest articles" / "More articles". #}
+{% macro postList(posts, heading, headingTag="h3") %}
+{% if posts and posts.length %}
+<nav class="post-links" aria-label="{{ heading }}">
+  <{{ headingTag }} class="post-links-heading">{{ heading }}</{{ headingTag }}>
+  <ul>
+    {% for p in posts %}
+    <li>
+      <a href="/blog/{{ p.slug }}">{{ p.title }}</a>
+      <span>{{ p.excerpt }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</nav>
+{% endif %}
 {% endmacro %}
 
 {% macro pagination(page, totalPages, base) %}

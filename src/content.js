@@ -22,8 +22,14 @@ function readDir(dir) {
     .map((f) => ({ file: join(full, f), slug: basename(f, '.md'), ...matter(readFileSync(join(full, f), 'utf8')) }));
 }
 
+const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
 const plainText = (html) =>
-  html.replace(/<[^>]*>/g, ' ').replace(/&[a-z#0-9]+;/gi, ' ').replace(/\s+/g, ' ').trim();
+  html
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(n))
+    .replace(/&([a-z]+);/gi, (m, name) => ENTITIES[name.toLowerCase()] ?? m)
+    .replace(/\s+/g, ' ')
+    .trim();
 
 function summarize(html, max = 160) {
   const firstPara = html.match(/<p>([\s\S]*?)<\/p>/)?.[1] ?? html;
@@ -38,6 +44,7 @@ function load() {
     authors.set(a.slug, {
       slug: a.slug,
       name: a.data.name || a.slug,
+      jobTitle: a.data.jobTitle || null,
       photo: a.data.photo || null,
       bio: a.content.trim() ? plainText(marked.parse(a.content)) : '',
     });
@@ -47,10 +54,15 @@ function load() {
   for (const p of readDir('blog')) {
     const { data } = p;
     const date = data.date ? new Date(data.date) : null;
+    // "author: dick-hardy" or "authors: [dick-hardy, jonathan-hardy]"
+    const authorSlugs = [].concat(data.authors ?? data.author ?? []);
     const problems = [];
     if (!data.title) problems.push('missing "title"');
     if (!date || Number.isNaN(date.getTime())) problems.push('missing or invalid "date"');
-    if (!authors.has(data.author)) problems.push(`unknown author "${data.author}" (add content/authors/${data.author}.md)`);
+    if (!authorSlugs.length) problems.push('missing "author"');
+    for (const slug of authorSlugs) {
+      if (!authors.has(slug)) problems.push(`unknown author "${slug}" (add content/authors/${slug}.md)`);
+    }
     if (problems.length) {
       console.error(`[content] Skipping ${p.file}: ${problems.join('; ')}`);
       continue;
@@ -58,15 +70,20 @@ function load() {
     if (data.draft) continue;
 
     const html = marked.parse(p.content);
+    const summary = summarize(html);
     posts.push({
       slug: data.slug || p.slug,
       title: String(data.title),
+      seoTitle: data.seoTitle ? String(data.seoTitle) : null, // <title>/search result title; the H1 stays `title`
       date: date.toISOString(),
       modified: data.updated ? new Date(data.updated).toISOString() : date.toISOString(),
-      excerpt: data.excerpt || summarize(html),
+      description: data.description || data.excerpt || summary, // meta description (aim for ≤155 chars)
+      excerpt: data.excerpt || data.description || summary, // blog card text
       content: html,
+      markdown: p.content.trim(),
+      wordCount: plainText(html).split(' ').length,
       readingMinutes: Math.max(1, Math.round(plainText(html).split(' ').length / 225)),
-      author: authors.get(data.author),
+      authors: authorSlugs.map((s) => authors.get(s)),
       image: data.image ? { url: data.image, alt: data.imageAlt || '' } : null,
     });
   }
@@ -93,7 +110,7 @@ function paginate(list, page) {
 
 export function getPosts({ page = 1, authorSlug } = {}) {
   let { posts } = current();
-  if (authorSlug) posts = posts.filter((p) => p.author.slug === authorSlug);
+  if (authorSlug) posts = posts.filter((p) => p.authors.some((a) => a.slug === authorSlug));
   return paginate(posts, page);
 }
 
@@ -107,4 +124,19 @@ export function getAuthorBySlug(slug) {
 
 export function getAllPosts() {
   return current().posts;
+}
+
+export function getLatestPosts(limit = 3) {
+  return current().posts.slice(0, limit);
+}
+
+export function getAllAuthors() {
+  return [...current().authors.values()];
+}
+
+// Other posts to link from a post: ones sharing an author first, then newest.
+export function getRelatedPosts(post, limit = 3) {
+  const others = current().posts.filter((p) => p.slug !== post.slug);
+  const shares = (p) => p.authors.some((a) => post.authors.some((b) => b.slug === a.slug));
+  return [...others.filter(shares), ...others.filter((p) => !shares(p))].slice(0, limit);
 }

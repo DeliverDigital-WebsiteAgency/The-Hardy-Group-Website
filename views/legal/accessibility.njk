@@ -1,0 +1,39 @@
+{% extends "layout.njk" %}
+{% set title = "Accessibility Statement" %}
+{% set description = "The Hardy Group Ministries' commitment to making thehardygroup.org accessible to everyone." %}
+{% set mainClass = "legal" %}
+
+{% block content %}
+<section class="page-header">
+  <div class="page-header-inner">
+    <a class="breadcrumb" href="/">&larr; Back to Home</a>
+    <p class="eyebrow">Legal</p>
+    <h1>Accessibility Statement</h1>
+    <div class="divider"></div>
+    <p class="legal-updated">Last reviewed September 22, 2026</p>
+  </div>
+</section>
+
+<article class="page-body">
+  <div class="page-body-inner prose">
+    <p>{{ site.legalName }} wants every pastor and ministry leader to be able to use www.{{ site.domain }}, including people with disabilities. We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.1, Level AA.</p>
+
+    <h2>What We Do</h2>
+    <ul>
+      <li>Use semantic page structure with clear headings, so screen readers and keyboard users can navigate easily.</li>
+      <li>Provide text alternatives for meaningful images.</li>
+      <li>Make every link and control reachable and usable with a keyboard, with a visible focus indicator and a “Skip to content” link.</li>
+      <li>Design pages that work at any zoom level and on phones, tablets, and desktops.</li>
+      <li>Check text and background colors for readable contrast.</li>
+    </ul>
+
+    <h2>Known Limitations</h2>
+    <p>Despite our efforts, some content may not yet be fully accessible. We review the Website periodically and fix problems as we find them.</p>
+
+    <h2>Feedback and Assistance</h2>
+    <p>If you have trouble accessing any part of the Website, or would like any of our content in a different format, please contact us. Tell us the page and the problem you ran into, and we will do our best to help and to respond within five business days.</p>
+    <p>Email: <a href="mailto:{{ site.email }}">{{ site.email }}</a><br>
+    Mail: {{ site.legalName }}, {{ site.address.street }}, {{ site.address.city }}, {{ site.address.state }} {{ site.address.zip }}</p>
+  </div>
+</article>
+{% endblock %}

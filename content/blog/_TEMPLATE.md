@@ -5,10 +5,14 @@
 
 title: How to Motivate Volunteers to Serve with Their Best Giftings
 date: 2026-09-22            # YYYY-MM-DD. Future dates stay hidden until that day.
-author: dick-hardy          # must match a file in content/authors/ (dick-hardy, jonathan-hardy)
+authors: [dick-hardy]       # one or more files in content/authors/, e.g. [dick-hardy, jonathan-hardy]
+
+# Recommended for SEO:
+description: "What the article answers, in 120-155 characters. Shown in Google results and on the blog list."
+seoTitle: "Shorter search-result title, max 60 characters"   # only if `title` is over ~42 characters
 
 # Optional:
-excerpt: One or two sentences shown on the blog list and in Google. Defaults to the first paragraph.
+excerpt: Different text for the blog list card, if you don't want it to match `description`.
 image: /images/blog/motivating-volunteers.jpg   # file goes in public/images/blog/
 imageAlt: Volunteers serving at a church event
 updated: 2026-09-30         # set when you meaningfully revise a post

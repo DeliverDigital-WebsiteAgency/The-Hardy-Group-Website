@@ -1,6 +1,7 @@
 {% extends "layout.njk" %}
-{% set title = "Lead Pastor Personal Coaching" %}
-{% set description = "The Hardy Group serves lead pastors as a non-resident executive staff member — guiding directional, leadership, board development, and ministry decisions." %}
+{% from "blog/_macros.njk" import postList %}
+{% set title = "Lead Pastor Coaching & Consulting" %}
+{% set description = "One-on-one coaching for lead pastors: Dick Hardy serves as your non-resident executive staff member for leadership, board, and ministry decisions." %}
 
 {% block content %}
 <section class="page-header">
@@ -14,6 +15,8 @@
 
 <article class="page-body">
   <div class="page-body-inner prose">
+
+    <p class="lead">The Hardy Group&rsquo;s Lead Pastor Coaching pairs you with Dick Hardy as a non-resident executive staff member &mdash; a right-hand advisor for your directional, leadership, board development, and ministry decisions.</p>
 
     <p>Given the pastor&rsquo;s role as lead pastor at the church, The Hardy Group would like to offer pastoral leadership and consulting services to the pastor, the board, and the church.</p>
 
@@ -52,6 +55,8 @@
     <div class="closing-block">
       <p>The pastor does not have to walk this leadership road alone. The church and the board deserve the best of his or her leadership. Advancing the vision God has given him or her in accomplishing God&rsquo;s mission is front and center.</p>
     </div>
+
+    {{ postList(latestPosts, "Articles from Dick & Jonathan Hardy", "h2") }}
 
   </div>
 </article>

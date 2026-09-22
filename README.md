@@ -21,8 +21,10 @@ public/                Static files (CSS, images)
    | --- | --- | --- |
    | `title` | yes | |
    | `date` | yes | `YYYY-MM-DD`. Future-dated posts stay hidden until that date (checked after each restart/deploy). |
-   | `author` | yes | Must match a file in `content/authors/`, e.g. `dick-hardy` or `jonathan-hardy` |
-   | `excerpt` | no | Summary for the blog list and search results. Defaults to the first paragraph. |
+   | `authors` | yes | One or more files in `content/authors/`, e.g. `[dick-hardy, jonathan-hardy]`. A single `author: dick-hardy` also works. |
+   | `description` | recommended | 120–155 character summary for Google and the blog list. Defaults to the first paragraph, which usually gets cut off. |
+   | `seoTitle` | if long title | Search-result title of 60 characters or fewer. The on-page H1 stays `title`. " \| The Hardy Group" is added automatically when it fits. |
+   | `excerpt` | no | Blog-card text, if it should differ from `description` |
    | `image`, `imageAlt` | no | Featured image, e.g. `/images/blog/foo.jpg` stored in `public/images/blog/` |
    | `updated` | no | Date of a meaningful revision |
    | `draft` | no | `true` keeps the post off the site |
@@ -53,8 +55,13 @@ Short bio shown under each of their posts and on /blog/author/dick-hardy.
 | `/blog` | All posts, newest first, 9 per page (`?page=2`…) |
 | `/blog/:slug` | Single post, with author box and BlogPosting schema |
 | `/blog/author/:slug` | Author bio and posts |
-| `/privacy`, `/terms`, `/eula` | `views/legal/*.njk` |
-| `/sitemap.xml`, `/robots.txt` | Generated; the sitemap includes every published post |
+| `/privacy`, `/terms`, `/accessibility`, `/eula` | `views/legal/*.njk` |
+
+The organization's legal name, email, and mailing address are set once in `src/site.js` and used by the footer, every legal page, structured data, and llms.txt.
+| `/sitemap.xml`, `/robots.txt` | Generated; the sitemap includes every published post and author page |
+| `/llms.txt`, `/llms-full.txt` | Generated site map and full article text for AI assistants ([llmstxt.org](https://llmstxt.org)) |
+
+Structured data (JSON-LD) is built in `src/schema.js`: NGO + WebSite (home), BlogPosting + BreadcrumbList (posts), ProfilePage/Person (authors), Service (coaching). Organization details live in `src/site.js`.
 
 The old `.html` URLs (`/TheHardyGroup.html`, `/blog.html`, `/personal-coaching.html`) 301-redirect to the new ones.
 
