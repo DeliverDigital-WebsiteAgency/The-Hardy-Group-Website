@@ -74,6 +74,11 @@ nav.main-nav a.nav-contact:hover, nav.main-nav a.nav-contact:focus-visible { bac
 .content-section p { font-size: 20px; font-weight: 300; line-height: 1.8; color: var(--ink); max-width: 620px; }
 .content-section p + p { margin-top: 18px; }
 
+/* Home: photo beside text */
+.split { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: 5fr 6fr; gap: 64px; align-items: center; }
+.split-photo { display: block; }
+.split-photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 30%; border-radius: 6px; border-bottom: 4px solid var(--gold); }
+
 /* Interior page header (coaching, legal, posts) */
 .page-header { padding: 72px 64px 24px; background: var(--cream); }
 .page-header-inner { max-width: 720px; margin: 0 auto; }
@@ -211,6 +216,8 @@ nav.main-nav a.nav-contact:hover, nav.main-nav a.nav-contact:focus-visible { bac
   .hero-photo { height: 320px; }
   .hero-text { padding: 48px 24px; }
   .content-section { padding: 64px 24px; }
+  .split { grid-template-columns: 1fr; gap: 32px; }
+  .split-photo img { aspect-ratio: 3 / 2; object-position: center 25%; }
   .page-header { padding: 48px 24px 16px; }
   .page-body { padding: 16px 24px 32px; }
   .page-cta { padding: 40px 24px; }

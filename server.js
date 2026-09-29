@@ -21,8 +21,30 @@ const env = nunjucks.configure('views', {
 });
 env.addFilter('date', (iso) =>
   new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }));
-env.addFilter('json', (v) => JSON.stringify(v).replace(/</g, '\\u003c'));
+// Escaping the @ in email addresses keeps JSON-LD valid but hides them from scrapers.
+env.addFilter('json', (v) =>
+  JSON.stringify(v).replace(/</g, '\\u003c').replace(/([\w.+-]+)@([\w-]+\.)/g, '$1\\u0040$2'));
 app.set('view engine', 'njk');
+
+// --- Email obfuscation ---
+// The contact address never appears in page HTML. mailto: links point to /email
+// (a redirect, for visitors without JavaScript) and carry the address reversed and
+// base64-encoded; public/js/email.js swaps the real address back in.
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const emailKey = Buffer.from([...site.email].reverse().join('')).toString('base64');
+const emailText = site.email.replace('@', ' [at] ').replace(/\.(?=[^.]+$)/, ' [dot] ');
+const mailtoRe = new RegExp(`href="mailto:${escapeRe(site.email)}"`, 'g');
+const emailRe = new RegExp(escapeRe(site.email), 'g');
+const obfuscateEmail = (html) => html
+  .replace(mailtoRe, `href="/email" rel="nofollow" data-email="${emailKey}"`)
+  .replace(emailRe, `<span data-email-text="${emailKey}">${emailText}</span>`);
+
+app.use((req, res, next) => {
+  const render = res.render.bind(res);
+  res.render = (view, locals) =>
+    render(view, locals, (err, html) => (err ? next(err) : res.send(obfuscateEmail(html))));
+  next();
+});
 
 app.use((req, res, next) => {
   res.locals.site = site;
@@ -34,6 +56,7 @@ app.use((req, res, next) => {
 // --- Static assets ---
 app.use(express.static('public', { maxAge: config.isProd ? '7d' : 0 }));
 app.get('/favicon.ico', (req, res) => res.redirect(301, '/favicon.svg'));
+app.get('/email', (req, res) => res.redirect(302, `mailto:${site.email}`));
 
 // --- Redirects from the old static .html URLs ---
 const legacy = {
@@ -116,7 +139,7 @@ app.get('/blog/:slug', (req, res, next) => {
 
 // --- SEO plumbing ---
 app.get('/robots.txt', (req, res) => {
-  res.type('text/plain').send(`User-agent: *\nAllow: /\n\nSitemap: ${config.siteUrl}/sitemap.xml\n`);
+  res.type('text/plain').send(`User-agent: *\nAllow: /\nDisallow: /email\n\nSitemap: ${config.siteUrl}/sitemap.xml\n`);
 });
 
 app.get('/sitemap.xml', (req, res) => {
@@ -150,7 +173,7 @@ app.get('/llms.txt', (req, res) => {
     '',
     `${site.name} (legal name: ${site.legalName}) is based in ${site.address.city}, Missouri, and was co-founded by Dick Hardy and Jonathan Hardy. `
       + 'It offers one-on-one coaching for lead pastors and publishes practical articles on pastoral leadership, church board governance, volunteers, and ministry decisions. '
-      + `Contact: ${site.email}.`,
+      + `Contact: ${emailText}.`,
     '',
     '## Services',
     '',
@@ -184,7 +207,7 @@ app.get('/llms-full.txt', (req, res) => {
       `URL: ${config.siteUrl}/blog/${p.slug}`,
       `Authors: ${byline(p)}`,
       `Published: ${p.date.slice(0, 10)}`, '',
-      p.markdown, '',
+      p.markdown.replace(emailRe, emailText), '',
     );
   }
   res.type('text/plain; charset=utf-8').send(parts.join('\n'));
