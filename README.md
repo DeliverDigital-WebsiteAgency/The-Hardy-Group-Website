@@ -121,7 +121,7 @@ Short bio shown under each of their posts and on /blog/author/dick-hardy.
 | `/blog` | All posts, newest first, 9 per page (`?page=2`…) |
 | `/blog/:slug` | Single post, with author box and BlogPosting schema |
 | `/blog/author/:slug` | Author bio and posts |
-| `/privacy`, `/terms`, `/accessibility`, `/eula` | `views/legal/*.njk` |
+| `/privacy`, `/terms`, `/accessibility` | `views/legal/*.njk` |
 | `/sitemap.xml`, `/robots.txt` | Generated; the sitemap includes every published post and author page |
 | `/llms.txt`, `/llms-full.txt` | Generated site map and full article text for AI assistants ([llmstxt.org](https://llmstxt.org)) |
 

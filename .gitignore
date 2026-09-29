@@ -6,6 +6,9 @@ Thumbs.db
 
 # Source material and old static prototypes — kept locally, not deployed.
 /Blogs/
+/DocX Files for Blogs/
+*.doc
+*.docx
 /files(1)/
 /*.html
 /*.docx

@@ -59,7 +59,6 @@ app.get('/personal-coaching', (req, res) => res.render('personal-coaching.njk', 
 const legalPages = {
   privacy: 'Privacy Policy',
   terms: 'Terms and Conditions',
-  eula: 'End User License Agreement',
   accessibility: 'Accessibility Statement',
 };
 for (const [slug, name] of Object.entries(legalPages)) {
